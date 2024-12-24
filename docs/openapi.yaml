@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: IPFS Simple Storage
+  version: 0.0.1
+
+paths:
+  /add:
+    post:
+      summary: Add an item
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              description: An item
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  itemCid:
+                    $ref: "#/components/schemas/Cid"
+                  newBucketRootCid:
+                    $ref: "#/components/schemas/Cid"
+        409:
+          description: Content already exists
+          content:
+            application/problem+json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [ "/problems/content-already-exists" ]
+                  cid:
+                    $ref: "#/components/schemas/Cid"
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /remove/{cid}:
+    post:
+      summary: Remove a file
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "bafkreibm6jg3ux5qumhcn2b3flc3tyu6dmlb4xa7u5bf44yegnrjhc4yeq"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  newBucketRootCid:
+                    $ref: "#/components/schemas/Cid"
+        401:
+          description: Invalid CID
+          content:
+            application/problem+json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [ "/problems/invalid-cid" ]
+                  error: {}
+        404:
+          description: Item does not exist
+          content:
+            application/problem+json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [ "/problems/item-does-not-exist" ]
+                  cid:
+                    $ref: "#/components/schemas/Cid"
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /list:
+    get:
+      summary: List all items
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bucketRootCid:
+                    $ref: "#/components/schemas/Cid"
+                  itemCids:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Cid"
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+
+components:
+  schemas:
+    Cid:
+      type: object
+      properties:
+        "/":
+          type: string
+          example: "bafkreibm6jg3ux5qumhcn2b3flc3tyu6dmlb4xa7u5bf44yegnrjhc4yeq"
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

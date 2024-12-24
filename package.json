@@ -1,0 +1,48 @@
+{
+  "name": "ipfs-simple-storage",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "build": "tsc --build",
+    "start": "node ./dist/index.js",
+    "watch": "tsx watch ./src/index.ts"
+  },
+  "dependencies": {
+    "@helia/car": "^4.0.2",
+    "@helia/interface": "^5.2.0",
+    "@helia/unixfs": "^4.0.2",
+    "@helia/verified-fetch": "^2.4.0",
+    "@ipld/car": "^5.4.0",
+    "@libp2p/interface": "^2.4.0",
+    "@libp2p/logger": "^5.1.6",
+    "@sgtpooki/file-type": "^1.0.1",
+    "async-mutex": "^0.5.0",
+    "blockstore-core": "^5.0.2",
+    "blockstore-fs": "^2.0.2",
+    "datastore-core": "^10.0.2",
+    "datastore-fs": "^10.0.2",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
+    "express-basic-auth": "^1.2.1",
+    "helia": "^5.2.0",
+    "interface-datastore": "^8.3.1",
+    "ipfs-unixfs": "^11.2.0",
+    "ipfs-unixfs-exporter": "^13.6.1",
+    "ipfs-unixfs-importer": "^15.3.1",
+    "libp2p": "^2.5.0",
+    "morgan": "^1.10.0",
+    "multer": "1.4.5-lts.1",
+    "multiformats": "^13.3.1",
+    "ts-results-es": "^4.2.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.12",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
