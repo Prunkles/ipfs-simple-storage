@@ -17,6 +17,7 @@
     "@ipld/car": "^5.4.0",
     "@libp2p/interface": "^2.4.0",
     "@libp2p/logger": "^5.1.6",
+    "@libp2p/tcp": "^10.0.15",
     "@sgtpooki/file-type": "^1.0.1",
     "async-mutex": "^0.5.0",
     "blockstore-core": "^5.0.2",

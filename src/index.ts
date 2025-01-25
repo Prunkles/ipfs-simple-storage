@@ -12,6 +12,7 @@ import { bucketHas, ipfsSimpleStorageRouter } from './bucket/index.js'
 import { v4 as uuidv4 } from "uuid";
 import morgan from 'morgan'
 import expressBasicAuth from 'express-basic-auth'
+import { tcp } from '@libp2p/tcp'
 
 function getConfig() {
     const apiBasicAuthTokens = (process.env.IPSS_API_BASIC_AUTH ?? 'user:password').split(':')
@@ -37,6 +38,9 @@ const blockstore = new FsBlockstore(config.blockstorePath)
 const libp2pDefaults = createLibp2pDefaults()
 const helia = await createHelia({
     libp2p: {
+        transports: [
+            tcp()
+        ],
         addresses: {
             listen: config.libp2p.addressesListen ?? libp2pDefaults.addresses?.listen,
         },

@@ -29,6 +29,9 @@ importers:
       '@libp2p/logger':
         specifier: ^5.1.6
         version: 5.1.6
+      '@libp2p/tcp':
+        specifier: ^10.0.15
+        version: 10.0.15
       '@sgtpooki/file-type':
         specifier: ^1.0.1
         version: 1.0.1
