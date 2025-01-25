@@ -1,5 +1,5 @@
 import express from 'express'
-import { createHelia } from 'helia'
+import { createHelia, libp2pDefaults as createLibp2pDefaults } from 'helia'
 import { FsDatastore } from 'datastore-fs'
 import { FsBlockstore } from 'blockstore-fs'
 import { createVerifiedFetch } from '@helia/verified-fetch'
@@ -15,6 +15,9 @@ import expressBasicAuth from 'express-basic-auth'
 
 function getConfig() {
     const apiBasicAuthTokens = (process.env.IPSS_API_BASIC_AUTH ?? 'user:password').split(':')
+    const libp2p = {
+        addressesListen: process.env.IPSS_LIBP2P_ADDRESSES_LISTEN?.split(','),
+    }
     return {
         datastorePath: process.env.IPSS_DATASTORE_PATH ?? './datastore',
         blockstorePath: process.env.IPSS_BLOCKSTORE_PATH ?? './blockstore',
@@ -23,6 +26,7 @@ function getConfig() {
         apiBasicAuthUsers: {
             [apiBasicAuthTokens[0]]: apiBasicAuthTokens[1],
         },
+        libp2p,
     }
 }
 const config = getConfig()
@@ -30,8 +34,13 @@ const config = getConfig()
 const datastore = new FsDatastore(config.datastorePath)
 const blockstore = new FsBlockstore(config.blockstorePath)
 
+const libp2pDefaults = createLibp2pDefaults()
 const helia = await createHelia({
-    libp2p: {},
+    libp2p: {
+        addresses: {
+            listen: config.libp2p.addressesListen ?? libp2pDefaults.addresses?.listen,
+        },
+    },
     datastore,
     blockstore,
 })
@@ -39,6 +48,9 @@ const helia = await createHelia({
 const log = helia.logger.forComponent('ipfs-simple-storage:index')
 
 log('PeerId:', helia.libp2p.peerId)
+for (let multiaddr of helia.libp2p.getMultiaddrs()) {
+    log('Listening on', multiaddr.toString())
+}
 
 const verifiedFetch = await createVerifiedFetch(
     helia, {
